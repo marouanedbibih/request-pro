@@ -1,0 +1,51 @@
+[{
+        "id":1,
+        "last_name": "Smith",
+        "first_name": "John",
+        "phone": "+1234567890",
+        "email": "john.smith@example.com",
+        "created_at": "2024-04-05T12:00:00Z",
+        "auth": "Google",
+        "image": "https://media.sproutsocial.com/uploads/2022/06/profile-picture.jpeg"
+    },
+    {
+        "id":2,
+        "last_name": "Johnson",
+        "first_name": "Emma",
+        "phone": "+1987654321",
+        "email": "emma.johnson@example.com",
+        "created_at": "2024-04-05T12:10:00Z",
+        "auth": "Facebook",
+        "image": "https://media.sproutsocial.com/uploads/2022/06/profile-picture.jpeg"
+    },
+    {
+        "id":3,
+        "last_name": "Williams",
+        "first_name": "Michael",
+        "phone": "+1122334455",
+        "email": "michael.williams@example.com",
+        "created_at": "2024-04-05T12:20:00Z",
+        "auth": "Email",
+        "image": "https://media.sproutsocial.com/uploads/2022/06/profile-picture.jpeg"
+    },
+    {
+        "id":4,
+        "last_name": "Jones",
+        "first_name": "Sarah",
+        "phone": "+1567890123",
+        "email": "sarah.jones@example.com",
+        "created_at": "2024-04-05T12:30:00Z",
+        "auth": "Google",
+        "image": "https://media.sproutsocial.com/uploads/2022/06/profile-picture.jpeg"
+    },
+    {
+        "id":5,
+        "last_name": "Brown",
+        "first_name": "David",
+        "phone": "+1987654321",
+        "email": "david.brown@example.com",
+        "created_at": "2024-04-05T12:40:00Z",
+        "auth": "Facebook",
+        "image": "https://media.sproutsocial.com/uploads/2022/06/profile-picture.jpeg"
+    }
+]

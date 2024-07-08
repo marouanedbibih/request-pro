@@ -1,0 +1,15 @@
+{
+    "errors":[
+        "Error: Failed to connect to database.",
+        "Error: Invalid username or password.",
+        "Error: File not found.",
+        "Error: Access denied.",
+        "Error: Network connection lost.",
+        "Error: Out of memory.",
+        "Error: Invalid input data format.",
+        "Error: Unable to parse JSON.",
+        "Error: Timeout reached while waiting for response.",
+        "Error: Internal server error."
+    ]
+    
+}

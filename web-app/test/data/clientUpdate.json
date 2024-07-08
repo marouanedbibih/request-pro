@@ -1,0 +1,12 @@
+{
+    "client":{
+        "id":1,
+        "last_name": "Brown",
+        "first_name": "David",
+        "phone": "+1987654321",
+        "email": "david.brown@example.com",
+        "created_at": "2024-04-05T12:40:00Z",
+        "auth": "Email",
+        "image": "https://media.sproutsocial.com/uploads/2022/06/profile-picture.jpeg"
+    }
+}

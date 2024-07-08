@@ -1,0 +1,23 @@
+[
+    { "id": 1, "name": "Electronics" },
+    { "id": 2, "name": "Clothing" },
+    { "id": 3, "name": "Home & Kitchen" },
+    { "id": 4, "name": "Books" },
+    { "id": 5, "name": "Sports & Outdoors" },
+    { "id": 6, "name": "Health & Beauty" },
+    { "id": 7, "name": "Toys & Games" },
+    { "id": 8, "name": "Automotive" },
+    { "id": 9, "name": "Movies & TV" },
+    { "id": 10, "name": "Grocery" },
+    { "id": 11, "name": "Tools & Home Improvement" },
+    { "id": 12, "name": "Pet Supplies" },
+    { "id": 13, "name": "Baby" },
+    { "id": 14, "name": "Office Products" },
+    { "id": 15, "name": "Jewelry & Watches" },
+    { "id": 16, "name": "Musical Instruments" },
+    { "id": 17, "name": "Software" },
+    { "id": 18, "name": "Handmade" },
+    { "id": 19, "name": "Industrial & Scientific" },
+    { "id": 20, "name": "Arts, Crafts & Sewing" }
+  ]
+  

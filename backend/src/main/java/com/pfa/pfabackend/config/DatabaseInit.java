@@ -1,129 +1,116 @@
-// package com.pfa.pfabackend.config;
+package com.pfa.pfabackend.config;
 
-// import com.github.javafaker.Faker;
-// import com.pfa.pfabackend.enums.Auth;
-// import com.pfa.pfabackend.enums.DemandeStatus;
-// import com.pfa.pfabackend.enums.DemandeType;
-// import com.pfa.pfabackend.enums.Role;
-// import com.pfa.pfabackend.model.*;
-// import com.pfa.pfabackend.repository.*;
-// import lombok.RequiredArgsConstructor;
-// import org.springframework.boot.CommandLineRunner;
-// import org.springframework.context.annotation.Configuration;
-// import org.springframework.security.crypto.password.PasswordEncoder;
-// import org.springframework.transaction.annotation.Transactional;
+import com.pfa.pfabackend.model.Admin;
+import com.pfa.pfabackend.model.Client;
+import com.pfa.pfabackend.model.Demande;
+import com.pfa.pfabackend.model.User;
+import com.pfa.pfabackend.enums.DemandeStatus;
+import com.pfa.pfabackend.enums.DemandeType;
+import com.pfa.pfabackend.enums.Role;
+import com.pfa.pfabackend.repository.AdminRepository;
+import com.pfa.pfabackend.repository.ClientRepository;
+import com.pfa.pfabackend.repository.DemandeRepository;
+import com.pfa.pfabackend.repository.UserRepository;
 
-// import java.sql.Date;
-// import java.util.Random;
+import lombok.RequiredArgsConstructor;
 
-// @Configuration
-// @RequiredArgsConstructor
-// public class DatabaseInit implements CommandLineRunner {
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
-//     private static final String PASSWORD = "password";
-//     private final UserRepository userRepository;
-//     private final ClientRepository clientRepository;
-//     private final AdminRepository adminRepository;
-//     private final CodeConfirmationRepository codeConfirmationRepository;
-//     private final DemandeRepository demandeRepository;
-//     private final PasswordEncoder passwordEncoder;
-//     private final Faker faker = new Faker();
-//     private final Random random = new Random();
+import java.util.Date;
+import java.util.Optional;
 
-//     @Override
-//     public void run(String... args) {
-//         initAdmin();
-//         // initClients(200); 
-//     }
+@Component
+@RequiredArgsConstructor
+public class DatabaseInit implements CommandLineRunner {
 
-//     @Transactional
-//     private void initAdmin() {
-//         // Create an admin user
-//         User adminUser = User.builder()
-//                 .lastname("Admin")
-//                 .firstname("User")
-//                 .email("admin@example.com")
-//                 .phone(faker.phoneNumber().phoneNumber())
-//                 .password(passwordEncoder.encode(PASSWORD))
-//                 .role(Role.ADMIN)
-//                 .created_at(new Date(System.currentTimeMillis()))
-//                 .build();
+    private final UserRepository userRepository;
+    private final AdminRepository adminRepository;
+    private final ClientRepository clientRepository;
+    private final DemandeRepository demandeRepository;
+    private final PasswordEncoder passwordEncoder;
+    private static final String PASSWORD = "password";
 
-//         // Save the admin user
-//         adminUser = userRepository.saveAndFlush(adminUser);
+    @Override
+    @Transactional
+    public void run(String... args) throws Exception {
+        // Initialize Admin
+        initAdmin();
 
-//         // Create an admin entity linked to the user
-//         Admin admin = Admin.builder()
-//                 .user(adminUser)
-//                 .build();
+        // Initialize Clients and Demandes
+        initClientsAndDemandes();
 
-//         // Save the admin
-//         adminRepository.save(admin);
+        System.out.println("Database initialization completed.");
+    }
 
-//         System.out.println("Admin initialized successfully.");
-//     }
+    @Transactional
+    private void initAdmin() {
+        String adminEmail = "admin@admin.com";
+        Optional<User> existingUser = userRepository.findByEmail(adminEmail);
 
-//     @Transactional
-//     private void initClients(int numberOfClients) {
-//         for (int i = 0; i < numberOfClients; i++) {
-//             // Create a client user
-//             User clientUser = User.builder()
-//                     .lastname(faker.name().lastName())
-//                     .firstname(faker.name().firstName())
-//                     .email(faker.internet().emailAddress())
-//                     .phone(faker.phoneNumber().phoneNumber())
-//                     .password(passwordEncoder.encode(PASSWORD))
-//                     .role(Role.CLIENT)
-//                     .created_at(new Date(System.currentTimeMillis()))
-//                     .build();
+        if (existingUser.isEmpty()) {
+            // Create Admin User
+            User adminUser = User.builder()
+                    .lastname("Admin")
+                    .firstname("Super")
+                    .email(adminEmail)
+                    .phone("123456789")
+                    .password(passwordEncoder.encode(PASSWORD))
+                    .role(Role.ADMIN)
+                    .created_at(new Date())
+                    .update_at(new Date())
+                    .build();
+            userRepository.save(adminUser);
 
-//             // Save the client user
-//             clientUser = userRepository.saveAndFlush(clientUser);
+            // Create Admin Entity
+            Admin admin = Admin.builder().user(adminUser).build();
+            adminRepository.save(admin);
+        } else {
+            System.out.println("Admin with email " + adminEmail + " already exists, skipping creation.");
+        }
+    }
 
-//             // Create a client entity linked to the user
-//             Client client = Client.builder()
-//                     .auth(Auth.EMAIL)
-//                     .user(clientUser)
-//                     .build();
+    @Transactional
+    private void initClientsAndDemandes() {
+        // Create 10 Clients
+        for (int i = 1; i <= 10; i++) {
+            String clientEmail = "client" + i + "@example.com";
+            Optional<User> existingClientUser = userRepository.findByEmail(clientEmail);
 
-//             // Save the client
-//             client = clientRepository.save(client);
+            if (existingClientUser.isEmpty()) {
+                // Create Client User
+                User clientUser = User.builder()
+                        .lastname("Client" + i)
+                        .firstname("Test" + i)
+                        .email(clientEmail)
+                        .phone("987654321" + i)
+                        .password(passwordEncoder.encode(PASSWORD))
+                        .role(Role.CLIENT)
+                        .created_at(new Date())
+                        .build();
+                userRepository.save(clientUser);
 
-//             // Add a confirmation code for the client
-//             addCodeConfirmation(client);
+                // Create Client Entity
+                Client client = Client.builder().user(clientUser).build();
+                clientRepository.save(client);
 
-//             // Add a demande for the client
-//             addDemande(client);
-//         }
-
-//         System.out.println(numberOfClients + " clients initialized successfully.");
-//     }
-
-//     private void addCodeConfirmation(Client client) {
-//         CodeConfirmation codeConfirmation = CodeConfirmation.builder()
-//                 .code(faker.internet().uuid())
-//                 .expiration_date(new Date(System.currentTimeMillis() + 86_400_000)) // 24 hours later
-//                 .client(client)
-//                 .build();
-
-//         // Save the confirmation code
-//         codeConfirmationRepository.save(codeConfirmation);
-//     }
-
-//     private void addDemande(Client client) {
-//         // Randomly select a demande type
-//         DemandeType randomType = DemandeType.values()[random.nextInt(DemandeType.values().length)];
-
-//         Demande demande = Demande.builder()
-//                 .description(faker.lorem().paragraph())
-//                 .date(new Date(System.currentTimeMillis()))
-//                 .notif(faker.lorem().sentence())
-//                 .status(DemandeStatus.PENDING)
-//                 .type(randomType)
-//                 .client(client)
-//                 .build();
-
-//         // Save the demande
-//         demandeRepository.save(demande);
-//     }
-// }
+                // Create 10 Demandes for Each Client
+                for (int j = 1; j <= 10; j++) {
+                    Demande demande = Demande.builder()
+                            .description("Demande description for Client " + i + " - Demande " + j)
+                            .date(new java.sql.Date(new Date().getTime()))
+                            .notif("Notification for demande " + j)
+                            .status(DemandeStatus.PENDING)
+                            .type(DemandeType.values()[j % 3])
+                            .client(client)
+                            .build();
+                    demandeRepository.save(demande);
+                }
+            } else {
+                System.out.println("Client with email " + clientEmail + " already exists, skipping creation.");
+            }
+        }
+    }
+}

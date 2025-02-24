@@ -1,24 +1,45 @@
-# Use a base image with OpenJDK for running Java applications
-FROM openjdk:21-slim-bullseye as build
+# Stage 1: Build the application
+FROM eclipse-temurin:21-jdk-alpine AS build 
 
-# Set the working directory in the container
+VOLUME /tmp
+
 WORKDIR /app
 
-# Copy the compiled application files into the container
-COPY target/pfa-backend-0.0.1-SNAPSHOT.jar /app/pfa-backend-0.0.1-SNAPSHOT.jar
+COPY mvnw .
+COPY .mvn .mvn
+COPY pom.xml .
+COPY src src
 
+RUN ./mvnw install -DskipTests
 
-# Stage 2 - the production environment
-FROM openjdk:21-slim-bullseye 
+# Stage 2: Create the final image
+FROM eclipse-temurin:21-jdk-alpine
 
-# Set the working directory in the container
 WORKDIR /app
 
-# Copy the compiled application files from the build stage into the new stage
-COPY --from=build /app /app
+# Define build arguments
+ARG SPRING_PROFILES_ACTIVE
+ARG SPRING_DATASOURCE_URL
+ARG SPRING_DATASOURCE_USERNAME
+ARG SPRING_DATASOURCE_PASSWORD
+ARG CORS_ALLOWED_ORIGINS
+ARG MAIL_HOST
+ARG MAIL_PORT
+ARG MAIL_USERNAME
+ARG MAIL_PASSWORD
 
-# Expose port 8024
-EXPOSE 8024
+ENV SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE}
+ENV SPRING_DATASOURCE_URL=${SPRING_DATASOURCE_URL}
+ENV SPRING_DATASOURCE_USERNAME=${SPRING_DATASOURCE_USERNAME}
+ENV SPRING_DATASOURCE_PASSWORD=${SPRING_DATASOURCE_PASSWORD}
+ENV CORS_ALLOWED_ORIGINS=${CORS_ALLOWED_ORIGINS}
+ENV MAIL_HOST=${MAIL_HOST}
+ENV MAIL_PORT=${MAIL_PORT}
+ENV MAIL_USERNAME=${MAIL_USERNAME}
+ENV MAIL_PASSWORD=${MAIL_PASSWORD}
 
-# Command to run the Spring Boot application
-CMD ["java", "-jar", "pfa-backend-0.0.1-SNAPSHOT.jar"]
+COPY --from=build /app/target/*.jar app.jar
+
+EXPOSE 8084
+
+ENTRYPOINT ["java", "-jar", "app.jar"]

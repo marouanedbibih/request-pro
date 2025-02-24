@@ -1,9 +1,10 @@
 server:
   port: 8084
 spring:
-  profiles:
-    active:
-    - local
+  # config:
+  #   activate:
+  #     on-profile:
+  #     - local
   application:
     name: request-pro
   datasource:
@@ -15,7 +16,7 @@ spring:
     hibernate:
       ddl-auto: create
     database: mysql
-    database-platform: org.hibernate.dialect.MySQL8Dialect
+    database-platform: org.hibernate.dialect.MySQLDialect
   mail:
     host: localhost
     port: 1025

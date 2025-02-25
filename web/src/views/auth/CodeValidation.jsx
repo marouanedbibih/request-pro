@@ -1,5 +1,7 @@
 // eslint-disable-next-line no-unused-vars
 import React, { useEffect, useState } from "react";
+import { FcGoogle } from "react-icons/fc";
+import { FaFacebook } from "react-icons/fa";
 import Error from "../../components/alert/Error";
 import Spinner from "../../components/spinner/Spinner.jsx";
 import axiosClient from "../../api/axios";
@@ -7,17 +9,17 @@ import { useStateContext } from "../../context/ContextProvider.jsx";
 
 // Test json
 // eslint-disable-next-line no-unused-vars
-import registerErrors from "../../../test/json/errors/register.json";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import Success from "../../components/alert/Success.jsx";
 import { useAuthContext } from "../../context/AuthContext.jsx";
 
-function NewPassword() {
-  const {_setCredentials,credentials} = useAuthContext();
-
-  const [newPasswordCredentials, setNewPasswordCredentials] = useState({
-    password: "",
-    confirm_password: "",
+function CodeValidation() {
+  // const [credentials, setCredentials] = useState({
+  //   code: "",
+  // });
+  const {credentials,_setCredentials} = useAuthContext();
+  const [codeValidation,setCodeValidation] = useState({
+    code: "",
     email: credentials.email
   });
 
@@ -36,8 +38,8 @@ function NewPassword() {
     ev.preventDefault();
     setLoading(true);
     // set the credentials object into the payload {body of request} for sent to the api
-    const payload = { ...newPasswordCredentials };
-    console.log("Payload:", payload);
+    const payload = { ...codeValidation };
+    // console.log("Payload:", payload);
 
     /**
      * axios function create by defautl into axios.js file
@@ -49,13 +51,12 @@ function NewPassword() {
      * ?page=3 is a query parameter
      * always check the response object by console,log(response) for see the response format
      */
-    newPasswordApi(payload);
-
+    codeValidationApi(payload);
   };
 
-  const newPasswordApi = (payload) => {
+  const codeValidationApi = (payload) => {
     axiosClient
-    .post("/auth/new-password", payload)
+    .post("/auth/code-validation", payload)
     // {data } is shortcut of response.data
     .then(({ data }) => {
       // console.log("Response", response);
@@ -70,13 +71,36 @@ function NewPassword() {
       _setSuccess(data.success);
       // //code-validation is the routes of client list page in frontend check /src/routes/routes.jsx file
       navigate(data.redirectTo);
+      _setCredentials({
+        ...credentials,
+        email: data.email,
+      });
     })
     .catch((err) => {
       setErrors(err.response.data.errors);
+      setLoading(false);
       // console.log("Error",err.response.data.errors);
     });
   }
 
+  /**
+   *   Response format:
+   *   Check the file /test/json/
+   *   for all the response formats
+   */
+
+  /**
+   * Tests Functions
+   * test only one at time
+   */
+
+  // useEffect(() => {
+  //   setErrors(registerErrors.errors);
+  // }, [registerErrors]);
+
+  // useEffect(() => {
+  //   setLoading(true);
+  // }, []);
 
   return (
     <>
@@ -95,36 +119,23 @@ function NewPassword() {
           {/* Title & Description form */}
           <div className="flex-col justify-start items-start gap-3 flex w-full">
             <div className="text-neutral-800 text-2xl font-bold font-['Roboto'] leading-9">
-              New Password
+              Code Validation
             </div>
             <div className="w-full text-start text-slate-500 text-base font-bold font-['Roboto'] leading-7">
-              Enter your new password
+              Enter your code to set up new password.
+            </div>
+            <div className="w-full text-start text-slate-500 text-base font-bold font-['Roboto'] leading-7">
+              {credentials.email}
             </div>
             {/* Form inputs */}
             <form className="w-full" onSubmit={onSubmit}>
               <div id="inputs" className="">
                 <input
-                  value={newPasswordCredentials.password}
+                  value={credentials.code}
                   onChange={(ev) =>
-                    setNewPasswordCredentials({
-                      ...newPasswordCredentials,
-                      password: ev.target.value,
-                    })
+                    setCodeValidation({ ...codeValidation, code: ev.target.value })
                   }
-                  type="password"
-                  placeholder="Enter your new password"
-                  className="mb-4 outline-none bg-white w-full border-2 border-gray-300 rounded-lg px-4 py-3 text-base transition duration-300 focus:border-gray-600"
-                />
-                <input
-                  value={newPasswordCredentials.confirm_password}
-                  onChange={(ev) =>
-                    setNewPasswordCredentials({
-                      ...newPasswordCredentials,
-                      confirm_password: ev.target.value,
-                    })
-                  }
-                  type="password"
-                  placeholder="Confirm your new password"
+                  placeholder="Enter your code validation"
                   className="mb-4 outline-none bg-white w-full border-2 border-gray-300 rounded-lg px-4 py-3 text-base transition duration-300 focus:border-gray-600"
                 />
               </div>
@@ -137,7 +148,7 @@ function NewPassword() {
                   className="self-stretch w-full px-5 py-2.5 bg-gray-800 rounded-lg shadow justify-center items-center gap-2 inline-flex hover:bg-gray-700 active:bg-gray-900"
                 >
                   <div className="text-white text-sm font-bold font-['Roboto'] uppercase leading-[21px]">
-                    Submit
+                    Valid
                   </div>
                 </button>
               </div>
@@ -149,4 +160,4 @@ function NewPassword() {
   );
 }
 
-export default NewPassword;
+export default CodeValidation;

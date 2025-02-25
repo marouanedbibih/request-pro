@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import axiosClient from "../../api/axios";
 import { useStateContext } from "../../context/ContextProvider.jsx";
 import Error from "../alert/Error.jsx";
-import data from "../../../test/data/clientUpdate.json";
 import { useClientContext } from "../../context/ClientContext.jsx";
 import Spinner from "../spinner/Spinner.jsx";
 

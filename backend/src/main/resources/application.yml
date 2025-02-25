@@ -1,10 +1,6 @@
 server:
   port: 8084
 spring:
-  # config:
-  #   activate:
-  #     on-profile:
-  #     - local
   application:
     name: request-pro
   datasource:
@@ -28,3 +24,6 @@ spring:
           auth: false
           starttls:
             enable: false
+  
+cors:
+  allowed-origins: http://localhost:3000

@@ -3,6 +3,7 @@ package com.pfa.pfabackend.config;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -29,10 +30,11 @@ public class SecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers(WHITE_LIST_URL).permitAll()  // Permit all requests that match the whitelist
-                        .requestMatchers("/api/clients/**").hasAuthority("ADMIN")  // Admin access for /api/clients
+                        .requestMatchers(WHITE_LIST_URL).permitAll()  
+                        .requestMatchers("/api/clients/**").hasAuthority("ADMIN")  
                         .requestMatchers("/api/admins/**").hasAnyAuthority("ADMIN")
-                        .anyRequest().authenticated()  // All other requests must be authenticated
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()  
+                        .anyRequest().authenticated()  
                 )
                 .sessionManagement(sessionManagement ->
                         sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // Using stateless session

@@ -1,6 +1,0 @@
-AWS:
-   database instance: request-pro-db-instance
-   database name: requestpro_db
-   database password: password
-   database port: 3300
-   database endpoint: request-pro-db-instance.cdyk8iy4qug8.eu-west-3.rds.amazonaws.com

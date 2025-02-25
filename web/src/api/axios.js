@@ -1,10 +1,7 @@
 import axios from "axios";
-// import process from 'process';
-// import {useStateContext} from "../context/ContextProvider";
 
-// const spring_boot_api_url = process.env.SPRING_BOOT_API_URL;
 const axiosClient = axios.create({
-    baseURL: `http://localhost:8024/api`
+    baseURL: `${import.meta.env.VITE_API_URL}/api`
 })
 
 

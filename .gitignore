@@ -36,4 +36,4 @@ backend/.vscode/
 backend/*.log
 
 
-.vscode/
+.vscode

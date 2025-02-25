@@ -34,3 +34,6 @@ backend/build/
 backend/.vscode/
 
 backend/*.log
+
+
+.vscode/
